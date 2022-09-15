@@ -24,7 +24,7 @@ class Product {
     return Product(
       id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
+      description: description,
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
