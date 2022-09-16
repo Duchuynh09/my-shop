@@ -24,6 +24,7 @@ class UserProductsScreen extends StatelessWidget {
 
   Widget buildUserProductListView(ProductsManager productsManager) {
     return ListView.builder(
+      itemCount: productsManager.itemCount,
       itemBuilder: (context, index) => Column(
         children: [
           UserProductListTile(
