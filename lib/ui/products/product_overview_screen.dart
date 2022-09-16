@@ -11,31 +11,37 @@ class ProductsOverviewScreen extends StatefulWidget {
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
-  var _showOnlyFavorites = false;
+  final _showOnlyFavorites = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My shop'),
-        actions: <Widget>[],
+        actions: <Widget>[buildProductFilterMenu(), buildShoppingCartIcon()],
       ),
       body: ProductsGrid(_showOnlyFavorites),
     );
   }
-  Widget buildShoppingCartIcon(){
-    return IconButton(onPressed: ()=>{
-      print('haha')
-    }, icon: Icon(Icons.shopping_cart),);
+
+  Widget buildShoppingCartIcon() {
+    return IconButton(
+      onPressed: () => {},
+      icon:const Icon(Icons.shopping_cart),
+    );
   }
-  Widget buildProductFilterMenu(){
+
+  Widget buildProductFilterMenu() {
     return PopupMenuButton(
-      itemBuilder: (ctx)=> [
-      const PopupMenuItem(child: Text('only favorites'),
-      value: FilterOptions.favorites,
-      ),
-      const PopupMenuItem(child: Text('show all'),
-      value: FilterOptions.all,)
-    ],
+      itemBuilder: (ctx) => [
+        const PopupMenuItem(
+          value: FilterOptions.favorites,
+          child: Text('only favorites'),
+        ),
+        const PopupMenuItem(
+          value: FilterOptions.all,
+          child: Text('show all'),
+        )
+      ],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/Product.dart';
+import '../../models/product.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen(this.product, {super.key});

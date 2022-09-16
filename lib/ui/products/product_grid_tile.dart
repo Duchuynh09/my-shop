@@ -1,7 +1,5 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
-import '../../models/Product.dart';
+import '../../models/product.dart';
 import './product_detail_screen.dart';
 
 class ProducGridTile extends StatelessWidget {
@@ -37,7 +35,6 @@ class ProducGridTile extends StatelessWidget {
         icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
         color: Theme.of(context).colorScheme.secondary,
         onPressed: () {
-          print('toggle a favorite');
         },
       ),
       title: Text(
@@ -47,7 +44,7 @@ class ProducGridTile extends StatelessWidget {
       trailing: IconButton(
         icon: const Icon(Icons.shopping_cart),
         onPressed: () {
-          print("Thêm vào giỏ hàng");
+          
         },
         color: Theme.of(context).colorScheme.secondary,
       ),
