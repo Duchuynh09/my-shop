@@ -33,7 +33,7 @@ class UserProductsScreen extends StatelessWidget {
           const Divider(),
         ],
       ),
-    );
+    ); 
   }
 
   Widget buildAddButton() {
