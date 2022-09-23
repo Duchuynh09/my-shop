@@ -1,5 +1,5 @@
 import '../../models/cart_item.dart';
-// import '../products/products_manager.dart';
+
 
 class CartManager {
   final Map<String, CartItem> _items = {
@@ -17,11 +17,12 @@ class CartManager {
   List<CartItem> get products {
     return _items.values.toList();
   }
+
   Iterable<MapEntry<String, CartItem>> get productEntries {
     return {..._items}.entries;
   }
 
-  double get totalAmout {
+  double get totalAmount {
     var total = 0.0;
     _items.forEach((key, value) {
       total += value.price * value.quantity;

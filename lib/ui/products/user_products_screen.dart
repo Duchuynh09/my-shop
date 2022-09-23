@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/ui/shared/app_drawer.dart';
 import 'user_product_list_tile.dart';
 import 'products_manager.dart';
+import '../shared/app_drawer.dart';
 
 class UserProductsScreen extends StatelessWidget {
   const UserProductsScreen({Key? key}) : super(key: key);
-
+  static const routeName = '/UserProductsScreen';
   @override
   Widget build(BuildContext context) {
     final productsManager = ProductsManager();
@@ -15,6 +17,7 @@ class UserProductsScreen extends StatelessWidget {
           buildAddButton(),
         ],
       ),
+      drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () async => {},
         child: buildUserProductListView(productsManager),
@@ -33,7 +36,7 @@ class UserProductsScreen extends StatelessWidget {
           const Divider(),
         ],
       ),
-    ); 
+    );
   }
 
   Widget buildAddButton() {
