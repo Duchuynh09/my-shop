@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myshop/ui/shared/app_drawer.dart';
+import 'package:provider/provider.dart';
 import 'user_product_list_tile.dart';
 import 'products_manager.dart';
 import '../shared/app_drawer.dart';
@@ -9,7 +10,6 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/UserProductsScreen';
   @override
   Widget build(BuildContext context) {
-    final productsManager = ProductsManager();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sản phẩm của bạn'),
@@ -20,22 +20,26 @@ class UserProductsScreen extends StatelessWidget {
       drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () async => {},
-        child: buildUserProductListView(productsManager),
+        child: buildUserProductListView(),
       ),
     );
   }
 
-  Widget buildUserProductListView(ProductsManager productsManager) {
-    return ListView.builder(
-      itemCount: productsManager.itemCount,
-      itemBuilder: (context, index) => Column(
-        children: [
-          UserProductListTile(
-            productsManager.items[index],
+  Widget buildUserProductListView() {
+    return Consumer<ProductsManager>(
+      builder: (context, productsManager, child) {
+        return ListView.builder(
+          itemCount: productsManager.itemCount,
+          itemBuilder: (context, index) => Column(
+            children: [
+              UserProductListTile(
+                productsManager.items[index],
+              ),
+              const Divider(),
+            ],
           ),
-          const Divider(),
-        ],
-      ),
+        );
+      },
     );
   }
 
