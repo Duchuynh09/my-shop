@@ -1,44 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'cart_manager.dart';
 import 'cart_item_card.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
-  const CartScreen({Key? key}) : super(key: key);
+
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cart = CartManager();
+    final cart = context.watch<CartManager>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Giỏ hàng',
-        ),
+        title: const Text('Your Cart'),
       ),
       body: Column(
         children: <Widget>[
           buildCartSummary(cart, context),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Expanded(
             child: buildCartDetails(cart),
-          )
+          ),
         ],
       ),
-    );
-  }
-
-  Widget buildCartDetails(CartManager cart) {
-    return ListView(
-      children: cart.productEntries
-          .map(
-            (e) => CartItemCard(
-              producId: e.key,
-              cardItem: e.value,
-            ),
-          )
-          .toList(),
     );
   }
 
@@ -51,7 +37,7 @@ class CartScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             const Text(
-              'total',
+              'Total',
               style: TextStyle(fontSize: 20),
             ),
             const Spacer(),
@@ -64,19 +50,27 @@ class CartScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).primaryColor,
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                print('An order has been added');
+              },
               style: TextButton.styleFrom(
-                textStyle: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              child: const Text(
-                'Đặt',
-              ),
-            ),
+                  textStyle: TextStyle(color: Theme.of(context).primaryColor)),
+              child: const Text('ORDER NOW'),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildCartDetails(CartManager cart) {
+    return ListView(
+      children: cart.productEntries
+          .map(
+            (entry) =>
+                CartItemCard(productId: entry.key, cardItem: entry.value),
+          )
+          .toList(),
     );
   }
 }

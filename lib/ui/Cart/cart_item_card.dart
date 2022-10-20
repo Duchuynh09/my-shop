@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../models/cart_item.dart';
 import '../shared/dialog_utils.dart';
+import 'cart_manager.dart';
 
 class CartItemCard extends StatelessWidget {
-  final String producId;
+  final String productId;
   final CartItem cardItem;
-  const CartItemCard({
-    required this.producId,
-    required this.cardItem,
-    super.key,
-  });
+
+  const CartItemCard(
+      {super.key, required this.productId, required this.cardItem});
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(cardItem.id),
       background: Container(
-        alignment: Alignment.centerRight,
         color: Theme.of(context).errorColor,
+        alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        margin: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 4,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         child: const Icon(
           Icons.delete,
           color: Colors.white,
@@ -30,31 +29,36 @@ class CartItemCard extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       confirmDismiss: (direction) {
-        return showComfirmDialog(context, 'Không mua nữa?');
+        return showComfirmDialog(
+          context,
+          'Do you want to remove the item from the cart?',
+        );
       },
-      onDismissed: (direction) => {},
+      onDismissed: (direction) {
+        context.read<CartManager>().removeItem(productId);
+      },
       child: buildItemCard(),
     );
   }
 
   Widget buildItemCard() {
     return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 4,
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: FittedBox(
-              child: Text('\$${cardItem.price}'),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: ListTile(
+          leading: CircleAvatar(
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: FittedBox(
+                child: Text('\$${cardItem.price}'),
+              ),
             ),
           ),
+          title: Text(cardItem.title),
+          subtitle: Text('Total: \$${(cardItem.price * cardItem.quantity)}'),
+          trailing: Text('${cardItem.quantity} x'),
         ),
-        title: Text(cardItem.title),
-        subtitle: Text('Total : \$${cardItem.price * cardItem.quantity}'),
-        trailing: Text('${cardItem.quantity} x'),
       ),
     );
   }
