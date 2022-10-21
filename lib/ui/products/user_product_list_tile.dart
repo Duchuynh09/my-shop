@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myshop/ui/products/products_manager.dart';
+import 'package:myshop/ui/screens.dart';
 import 'package:provider/provider.dart';
 import '../../models/product.dart';
 
@@ -48,7 +48,12 @@ class UserProductListTile extends StatelessWidget {
 
   Widget editButton(BuildContext context) {
     return IconButton(
-      onPressed: () async => {},
+      onPressed: () async => {
+        Navigator.of(context).pushNamed(
+          EditProductScreen.routeName,
+          arguments: product.id,
+        )
+      },
       icon: const Icon(Icons.edit_outlined),
       color: Theme.of(context).primaryColor,
     );

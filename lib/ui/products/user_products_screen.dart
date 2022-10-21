@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/ui/screens.dart';
 import 'package:myshop/ui/shared/app_drawer.dart';
 import 'package:provider/provider.dart';
 import 'user_product_list_tile.dart';
-import 'products_manager.dart';
 import '../shared/app_drawer.dart';
 
 class UserProductsScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class UserProductsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Sản phẩm của bạn'),
         actions: <Widget>[
-          buildAddButton(),
+          buildAddButton(context),
         ],
       ),
       drawer: const AppDrawer(),
@@ -43,10 +43,14 @@ class UserProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildAddButton() {
+  Widget buildAddButton(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.add_to_photos),
-      onPressed: () => {},
-    );
+        icon: const Icon(Icons.add_to_photos),
+        onPressed: () => {
+              Navigator.of(context).pushNamed(
+                EditProductScreen.routeName,
+                arguments: null,
+              ),
+            });
   }
 }

@@ -5,6 +5,6 @@ export 'products/products_manager.dart';
 
 export 'oders/order_screen.dart';
 export 'oders/order_manager.dart';
-
+export './manager/edit_product_screen.dart';
 export 'cart/cart_screen.dart';
 export 'cart/cart_manager.dart';

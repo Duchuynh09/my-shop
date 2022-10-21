@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/ui/oders/order_manager.dart';
+import 'package:myshop/ui/oders/order_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_manager.dart';
@@ -50,9 +52,30 @@ class CartScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).primaryColor,
             ),
             TextButton(
-              onPressed: () {
-                print('An order has been added');
-              },
+              onPressed: cart.totalAmount <= 0
+                  ? null
+                  : () {
+                      context
+                          .read<OrderManager>()
+                          .addOrder(cart.products, cart.totalAmount);
+
+                      final snackBar = SnackBar(
+                        // ignore: prefer_const_constructors
+                        content: Text(
+                          'Thanh toán thành công!!!',
+                          textAlign: TextAlign.center,
+                        ),
+                        action: SnackBarAction(
+                            label: 'Sang trang order',
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(OrdersScreen.routeName);
+                            }),
+                      );
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(snackBar);
+                    },
               style: TextButton.styleFrom(
                   textStyle: TextStyle(color: Theme.of(context).primaryColor)),
               child: const Text('ORDER NOW'),
