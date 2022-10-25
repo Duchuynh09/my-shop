@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../auth/auth_manager.dart';
 import '../oders/order_screen.dart';
 import '../products/user_products_screen.dart';
 
@@ -23,7 +25,10 @@ class AppDrawer extends StatelessWidget {
               'Cửa hàng',
             ),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context)
+                ..pop()
+                ..pushReplacementNamed('/');
+              context.read<AuthManager>().logout();
             },
           ),
           const Divider(),
