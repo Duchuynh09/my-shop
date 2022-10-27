@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/models/product.dart';
+import 'package:myshop/ui/cart/cart_screen.dart';
 import 'package:myshop/ui/screens.dart';
 import 'package:provider/provider.dart';
+
 import './products_grid.dart';
+
 import '../shared/app_drawer.dart';
 import 'top_right_badge.dart';
 
@@ -21,7 +25,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchProducts = context.read<ProductsManager>().fetchProduct();
+    _fetchProducts = context.read<ProductsManager>().fetchProducts();
   }
 
   @override
@@ -63,7 +67,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               Icons.shopping_cart,
             ),
             onPressed: () {
-              Navigator.of(ctx).pushNamed(CartScreen.routeName);
+              Navigator.of(context).pushNamed(CartScreen.routeName);
             },
           ),
         );
@@ -74,11 +78,13 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   Widget buildProductFilterMenu() {
     return PopupMenuButton(
       onSelected: (FilterOptions selectedValue) {
-        if (selectedValue == FilterOptions.favorites) {
-          _showOnlyFavorites.value = true;
-        } else {
-          _showOnlyFavorites.value = false;
-        }
+        setState(() {
+          if (selectedValue == FilterOptions.favorites) {
+            _showOnlyFavorites.value = true;
+          } else {
+            _showOnlyFavorites.value = false;
+          }
+        });
       },
       icon: const Icon(
         Icons.more_vert,

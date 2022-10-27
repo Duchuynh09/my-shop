@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/product.dart';
 import '../shared/dialog_utils.dart';
+
 import '../products/products_manager.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
+
   EditProductScreen(
     Product? product, {
     super.key,
   }) {
     if (product == null) {
       this.product = Product(
-        id: null,
         title: '',
-        price: 0,
         description: '',
+        price: 0,
         imageUrl: '',
       );
     } else {
       this.product = product;
     }
   }
+
   late final Product product;
+
   @override
   State<EditProductScreen> createState() => _EditProductScreenState();
 }
@@ -34,10 +38,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   late Product _editedProduct;
   var _isLoading = false;
 
-  get children => null;
-
   bool _isValidImageUrl(String value) {
-    return (value.startsWith("http") || value.startsWith("https")) &&
+    return (value.startsWith('http') || value.startsWith('https')) &&
         (value.endsWith('.png') ||
             value.endsWith('.jpg') ||
             value.endsWith('.jpeg'));
@@ -50,6 +52,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         if (!_isValidImageUrl(_imageUrlController.text)) {
           return;
         }
+        // Ảnh hợp lệ -> Vẽ lại màn hình để hiện preview
         setState(() {});
       }
     });
@@ -71,22 +74,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _editForm.currentState!.save();
+
     setState(() {
       _isLoading = true;
     });
+
     try {
       final productsManager = context.read<ProductsManager>();
       if (_editedProduct.id != null) {
-        productsManager.updateProduct(_editedProduct);
+        await productsManager.updateProduct(_editedProduct);
       } else {
-        productsManager.addProduct(_editedProduct);
+        await productsManager.addProduct(_editedProduct);
       }
-    } catch (err) {
-      await showErrorDialog(context, 'Co gi do bi sai');
+    } catch (error) {
+      await showErrorDialog(context, 'Something went wrong.');
     }
+
     setState(() {
       _isLoading = false;
     });
+
     if (mounted) {
       Navigator.of(context).pop();
     }
@@ -133,13 +140,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Cung cấp tên';
+          return 'Please provide a value.';
         }
         return null;
       },
-      onSaved: ((newValue) {
-        _editedProduct = _editedProduct.copyWith(title: newValue);
-      }),
+      onSaved: (value) {
+        _editedProduct = _editedProduct.copyWith(title: value);
+      },
     );
   }
 
@@ -151,19 +158,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Cung cấp gía mới';
+          return 'Please enter a price.';
         }
         if (double.tryParse(value) == null) {
-          return 'Nhập giá chính xác';
+          return 'Please enter a valid number.';
         }
         if (double.parse(value) <= 0) {
-          return 'Miễn phí hả';
+          return 'Please enter a number greater than zero';
         }
         return null;
       },
-      onSaved: (newValue) {
-        _editedProduct =
-            _editedProduct.copyWith(price: double.parse(newValue!));
+      onSaved: (value) {
+        _editedProduct = _editedProduct.copyWith(price: double.parse(value!));
       },
     );
   }
@@ -171,44 +177,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
   TextFormField buildDescriptionField() {
     return TextFormField(
       initialValue: _editedProduct.description,
-      decoration: const InputDecoration(labelText: 'Mô tả'),
+      decoration: const InputDecoration(labelText: 'Description'),
       maxLines: 3,
-      textInputAction: TextInputAction.next,
       keyboardType: TextInputType.multiline,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Mô tả lại';
+          return 'Please enter a description.';
         }
         if (value.length < 10) {
-          return "Mô tả thêm đi";
+          return 'Should be at least 10 characters long.';
         }
         return null;
       },
-      onSaved: (newValue) {
-        _editedProduct = _editedProduct.copyWith(decription: newValue);
-      },
-    );
-  }
-
-  TextFormField buildImageURLField() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'Hình'),
-      controller: _imageUrlController,
-      focusNode: _imageUrlFocusNode,
-      onFieldSubmitted: ((value) => _saveForm()),
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.url,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Chọn ảnh trước';
-        }
-        if (!_isValidImageUrl(value)) {
-          return "Hình ảnh không chính xác";
-        }
-        return null;
-      },
-      onSaved: (newValue) {
-        _editedProduct = _editedProduct.copyWith(imageUrl: newValue);
+      onSaved: (value) {
+        _editedProduct = _editedProduct.copyWith(decription: value);
       },
     );
   }
@@ -218,20 +200,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.green,
-            ),
-          ),
           width: 100,
           height: 100,
           margin: const EdgeInsets.only(
             top: 8,
             right: 10,
           ),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1,
+              color: Colors.grey,
+            ),
+          ),
           child: _imageUrlController.text.isEmpty
-              ? const Text('Chọn ảnh')
+              ? const Text('Enter a URL')
               : FittedBox(
                   child: Image.network(
                     _imageUrlController.text,
@@ -239,8 +221,33 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                 ),
         ),
-        Expanded(child: buildImageURLField())
+        Expanded(
+          child: buildImageUrlField(),
+        ),
       ],
+    );
+  }
+
+  TextFormField buildImageUrlField() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Image URL'),
+      keyboardType: TextInputType.url,
+      textInputAction: TextInputAction.done,
+      controller: _imageUrlController,
+      focusNode: _imageUrlFocusNode,
+      onFieldSubmitted: (value) => _saveForm(),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter a image URL.';
+        }
+        if (!_isValidImageUrl(value)) {
+          return 'Please enter a valid image URL.';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _editedProduct = _editedProduct.copyWith(imageUrl: value);
+      },
     );
   }
 }
