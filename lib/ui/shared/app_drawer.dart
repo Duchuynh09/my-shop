@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/ui/products/product_overview_screen.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_manager.dart';
 import '../oders/order_screen.dart';
@@ -25,10 +26,7 @@ class AppDrawer extends StatelessWidget {
               'Cửa hàng',
             ),
             onTap: () {
-              Navigator.of(context)
-                ..pop()
-                ..pushReplacementNamed('/');
-              context.read<AuthManager>().logout();
+              Navigator.of(context).pushReplacementNamed('/');
             },
           ),
           const Divider(),
@@ -53,6 +51,21 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(UserProductsScreen.routeName);
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.shop,
+            ),
+            title: const Text(
+              'logout',
+            ),
+            onTap: () {
+              Navigator.of(context)
+                ..pop()
+                ..pushReplacementNamed('/');
+              context.read<AuthManager>().logout();
             },
           ),
         ],

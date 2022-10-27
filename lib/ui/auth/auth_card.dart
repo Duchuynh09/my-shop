@@ -9,6 +9,7 @@ import 'auth_manager.dart';
 enum AuthMode { signup, login }
 
 class AuthCard extends StatefulWidget {
+  static const routeName = '/';
   const AuthCard({
     super.key,
   });
@@ -137,8 +138,6 @@ class _AuthCardState extends State<AuthCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        // Không có background ở đây
-        // backgroundColor: Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         textStyle: TextStyle(
           backgroundColor: Theme.of(context).primaryColor,

@@ -11,18 +11,27 @@ class UserProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sản phẩm của bạn'),
-        actions: <Widget>[
-          buildAddButton(context),
-        ],
-      ),
-      drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () async => {},
-        child: buildUserProductListView(),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Sản phẩm của bạn'),
+          actions: <Widget>[
+            buildAddButton(context),
+          ],
+        ),
+        drawer: const AppDrawer(),
+        body: FutureBuilder(
+          future: _refreshProducts(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return RefreshIndicator(
+              onRefresh: () async => {},
+              child: buildUserProductListView(),
+            );
+          },
+        ));
   }
 
   Widget buildUserProductListView() {
@@ -52,5 +61,9 @@ class UserProductsScreen extends StatelessWidget {
                 arguments: null,
               ),
             });
+  }
+
+  Future<void> _refreshProducts(BuildContext context) async {
+    await context.read<ProductsManager>().fetchProduct(true);
   }
 }
